@@ -10,16 +10,20 @@ button {
     margin-bottom: 36px;
 }
 
+.buttons {
+    display: flex;
+    gap: 20px;
+}
+
+#clear-grid {
+    margin-right: 48px;
+}
+
 .container {
     height: 960px;
     width: 960px;
-    max-height: 960px;
-    max-width: 960px;
-    justify-content: center;
-    align-items: center;
-    border-left: 1px solid black;
-    border-top: 1px solid black;
     flex: none;
     display: flex;
     flex-wrap: wrap;
+    flex-direction:column;
 }
