@@ -1,35 +1,34 @@
 function createGrid(num, erase) {
-    if (num === null) {return}
+    if (num === null) {return} // Cancel interaction if cancel button is clicked
     if (num < 1 || num > 100 || isNaN(+num)) {
-        alert(`Please enter a number between 1 and 100.`);
-        createGridHandler();
+        return createGrid(prompt(`Please enter a number between 1 and 100:`, ``), true);
     }
-    else {
-        if (erase) {eraseGrid()}
-        for (i = 1; i <= num; i++) {
-            const row = document.createElement(`div`);
-            row.style.cssText = `
-                border-top: solid black 1px;
-                display: flex;
+    const rows = document.querySelectorAll(`.container div`);
+    rows.forEach((row) => {
+        row.remove();
+    })
+    for (i = 1; i <= num; i++) {
+        const row = document.createElement(`div`);
+        for (n = 1; n <= num; n++) {
+            const cell = document.createElement(`div`);
+            cell.style.cssText = `
+                border-left: solid black 1px;
                 flex: 1;`
-            if (i == num) {
-                row.style.borderBottom = `solid black 1px`;
+            if (n == num) {
+                cell.style.borderRight = `solid black 1px`;
             }
-            for (n = 1; n <= num; n++) {
-                const cell = document.createElement(`div`);
-                cell.style.cssText = `
-                    border-left: solid black 1px;
-                    flex: 1;`
-                if (n == num) {
-                    cell.style.borderRight = `solid black 1px`;
-                }
-                cell.addEventListener(`mouseenter`, penHandler);
-                cell.classList.add(`cell`);
-                clearCell(cell);
-                row.appendChild(cell);
-            }
-            container.appendChild(row);
+            cell.addEventListener(`mouseenter`, penHandler);
+            clearCell(cell);
+            row.appendChild(cell);
         }
+        row.style.cssText = `
+            border-top: solid black 1px;
+            display: flex;
+            flex: 1;`
+        if (i == num) {
+            row.style.borderBottom = `solid black 1px`;
+        }
+        container.appendChild(row);
     }
 }
 
@@ -37,15 +36,8 @@ function createGridHandler() {
     createGrid(prompt(`Enter the number of cells on each side of the new grid:`, ``), true);
 }
 
-function eraseGrid() {
-    const rows = document.querySelectorAll(`.container div`);
-    rows.forEach((row) => {
-        row.remove();
-    })
-}
-
 function clearGrid() {
-    const cells = document.querySelectorAll(`.cell`);
+    const cells = document.querySelectorAll(`.container div div`);
     cells.forEach((cell) => {
         clearCell(cell);
     })
@@ -69,7 +61,7 @@ function penHandler(event) {
         ${Math.floor(Math.random()*256)}`;
     }
     else if (penType == `darken`) {
-        let newBrightness = event.target.dataset.brightness - 10;
+        const newBrightness = event.target.dataset.brightness - 10;
         if (newBrightness >= 0) {
             event.target.style.filter = `brightness(${newBrightness}%)`;
             event.target.dataset.brightness = newBrightness;
@@ -85,12 +77,10 @@ clearGridBtn.addEventListener(`click`, clearGrid);
 
 const penButtons = document.querySelectorAll(`.pen`);
 penButtons.forEach((button) => {
-    button.addEventListener(`click`, () => {penType = button.id})
-})
+    button.addEventListener(`click`, () => {penType = button.id})})
 
 const container = document.querySelector(`.container`);
 
 createGrid(16, false);
 
 let penType = `black`;
-
